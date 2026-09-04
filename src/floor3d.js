@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { ROOMS, CONTEXT, FOOTPRINT, CATEGORIES } from './data.js'
+import { L, isRTL } from './i18n.js'
 
 /*
  * مخطط ثلاثي الأبعاد تفاعلي — Interactive 3D floor plan
@@ -12,7 +13,7 @@ export function createFloor3D(canvas, { onSelect } = {}) {
   renderer.outputColorSpace = THREE.SRGBColorSpace
 
   const scene = new THREE.Scene()
-  scene.fog = new THREE.Fog(0x001008, 120, 260)
+  scene.fog = new THREE.Fog(0x031813, 120, 260)
 
   const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 1000)
   // Building is wide (x) and shallow (z). On a portrait phone we frame the
@@ -40,7 +41,7 @@ export function createFloor3D(canvas, { onSelect } = {}) {
   const key = new THREE.DirectionalLight(0xffffff, 1.15)
   key.position.set(30, 80, 40)
   scene.add(key)
-  const rim = new THREE.DirectionalLight(0x8de0b0, 0.6)
+  const rim = new THREE.DirectionalLight(0x1CB68D, 0.6)
   rim.position.set(-40, 30, -30)
   scene.add(rim)
 
@@ -51,7 +52,7 @@ export function createFloor3D(canvas, { onSelect } = {}) {
   let selectedId = null
   let interacted = false
 
-  const catColor = (c) => new THREE.Color(CATEGORIES[c] ? CATEGORIES[c].color : '#60BC94')
+  const catColor = (c) => new THREE.Color(CATEGORIES[c] ? CATEGORIES[c].color : '#1CB68D')
 
   // ---------- build footprint slab ----------
   function buildSlab() {
@@ -81,14 +82,16 @@ export function createFloor3D(canvas, { onSelect } = {}) {
     const ctx = c.getContext('2d')
     const fs = big ? 52 : 44
     const pad = 26
-    ctx.font = `700 ${fs}px Tajawal, sans-serif`
-    ctx.direction = 'rtl'
+    const font = `700 ${fs}px Arial, Helvetica, sans-serif`
+    const dir = isRTL() ? 'rtl' : 'ltr'
+    ctx.font = font
+    ctx.direction = dir
     const w = Math.ceil(ctx.measureText(text).width) + pad * 2
     const h = fs + pad * 1.4
     c.width = w
     c.height = h
-    ctx.font = `700 ${fs}px Tajawal, sans-serif`
-    ctx.direction = 'rtl'
+    ctx.font = font
+    ctx.direction = dir
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
     // pill background
@@ -167,18 +170,36 @@ export function createFloor3D(canvas, { onSelect } = {}) {
       cap.position.y = h / 2 + 0.05
       mesh.add(cap)
 
-      const label = makeLabel(room.name, '#eafff4', ['hackathon', 'coding'].includes(room.id))
+      const big = ['hackathon', 'coding'].includes(room.id)
+      const label = makeLabel(L(room.name), '#eafff4', big)
       label.position.set(x, h + 3.4, z)
       group.add(label)
 
       group.add(mesh)
-      roomMeshes[room.id] = { mesh, edges, mat, base: base.clone(), hi: col.clone(), baseY: h / 2, targetY: h / 2, floor: floorId, label, labelBaseY: h + 3.4 }
+      roomMeshes[room.id] = { mesh, edges, mat, base: base.clone(), hi: col.clone(), baseY: h / 2, targetY: h / 2, floor: floorId, label, labelBaseY: h + 3.4, big, group }
     })
 
     group.visible = false
     scene.add(group)
     floorGroups[floorId] = group
     return group
+  }
+
+  /* ---------- إعادة توليد اللافتات بعد تغيير اللغة ----------
+     Labels are canvas textures, so a language change means redrawing them.
+     Width depends on the text, so the sprite is rebuilt and swapped in. */
+  function refreshLabels() {
+    Object.entries(roomMeshes).forEach(([id, o]) => {
+      const room = ROOMS.find((r) => r.id === id)
+      if (!room || !o.label) return
+      const next = makeLabel(L(room.name), '#eafff4', o.big)
+      next.position.copy(o.label.position)
+      o.group.add(next)
+      o.group.remove(o.label)
+      o.label.material.map.dispose()
+      o.label.material.dispose()
+      o.label = next
+    })
   }
 
   // ---------- selection ----------
@@ -197,9 +218,19 @@ export function createFloor3D(canvas, { onSelect } = {}) {
   }
 
   function selectRoom(id) {
+    /* تُبنى مجسّمات الطابق عند أول عرض له فقط، فـ roomMeshes لا يعرف غرف طابق
+       لم يُعرض بعد. لذلك نحدّد الطابق من البيانات لا من المجسّمات، ونبدّله أولًا
+       (وهو ما يبنيه) ثم نبحث عن المجسّم.
+       A floor's meshes are built the first time it is shown, so roomMeshes knows
+       nothing about a floor that has not been displayed yet. Resolve the floor
+       from the data rather than the meshes, switch to it first — which builds
+       it — and only then look the mesh up. Reading roomMeshes first made this
+       a silent no-op for every first-floor room. */
+    const room = ROOMS.find((r) => r.id === id)
+    if (!room) return
+    if (room.floor !== activeFloor) setFloor(room.floor)
     const o = roomMeshes[id]
     if (!o) return
-    if (o.floor !== activeFloor) setFloor(o.floor)
     interacted = true
     controls.autoRotate = false
     setSelected(id)
@@ -332,5 +363,5 @@ export function createFloor3D(canvas, { onSelect } = {}) {
     renderer.dispose()
   }
 
-  return { init, setFloor, selectRoom, clearSelection, resetView, dispose, get floor() { return activeFloor } }
+  return { init, setFloor, selectRoom, clearSelection, resetView, refreshLabels, dispose, get floor() { return activeFloor } }
 }

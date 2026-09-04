@@ -1,4 +1,4 @@
-# دليل هاكاثون الابتكار — تطبيق ويب للجوال
+# دليل هاكاثون ابتكار صندوق الاستثمارات العامة · INNOVATE — تطبيق ويب للجوال
 
 موقع تفاعلي مُحسّن للهواتف (iPhone و Android) يُفتح عبر رمز QR، ويعرض:
 
@@ -6,17 +6,23 @@
 2. **المخطط ثلاثي الأبعاد** — نموذج تفاعلي للطابقين، يمكن للمستخدم تدويره
    وتكبيره والنقر على أي قاعة لعرض تفاصيلها وما تقدّمه.
 
-الواجهة بالكامل باللغة العربية (RTL)، بتصميم داكن فاخر مستوحى من هوية
-مركز الابتكار — الهيئة السعودية للحكومة الرقمية.
+الواجهة ثنائية اللغة (عربي RTL / إنجليزي LTR) مع مبدّل في شريط التنقّل،
+بتصميم داكن مبني على هوية شعار الحدث: **أبيض + أخضر نعناعي `#1CB68D` على
+أرضية خضراء داكنة** — واللون مأخوذ عيّنةً من ملف الشعار نفسه. الشعار
+الرسمي يُستخدم كما هو (PNG) عبر `src/brand.js` ولا يُعاد رسمه، ولوحة الألوان
+كاملةً معرّفة كمتغيّرات في أعلى `src/style.css`. كل النصوص الظاهرة مكتوبة
+على هيئة `{ ar, en }` في `src/data.js` و`src/i18n.js`.
 
 ---
 
 ## Interactive event guide (mobile web app)
 
-A phone-first web app (iPhone/Android), opened via a QR code, with an immersive
-Arabic agenda and an interactive **3D floor plan** (rotate / pinch-zoom / tap a
-room for details). Built with Vite + Three.js, fonts and 3D bundled locally so
-it works on venue Wi‑Fi with no external dependencies.
+A phone-first web app (iPhone/Android), opened via a QR code, with a two-day
+agenda and an interactive **floor plan** — rotate, pinch-zoom, tap a room, or
+pick it from the Spaces list beside the model. Bilingual throughout (Arabic RTL /
+English LTR, switchable from the nav bar). Built with Vite + Three.js, typeset
+entirely in Arial (system font, nothing to download), with the 3D engine bundled
+locally so it works on venue Wi‑Fi with no external dependencies.
 
 ## التشغيل محليًا · Run locally
 
@@ -73,6 +79,8 @@ index.html          # نقطة الدخول (RTL, عربي)
 src/
   main.js           # هيكل التطبيق والتنقّل بين الشاشات
   data.js           # ← كل المحتوى القابل للتعديل (أجندة + غرف)
+  i18n.js           # اللغتان ونصوص الواجهة
+  brand.js          # الشعار الرسمي (PNG) من src/assets
   agenda.js         # شاشة الأجندة الغامرة
   floor3d.js        # المخطط ثلاثي الأبعاد (Three.js)
   qr.js             # مولّد رمز QR
@@ -85,6 +93,6 @@ src/
 
 - **أداء:** يُحمّل محرّك Three.js فقط عند فتح شاشة المخطط (تحميل كسول)، فتبقى
   الصفحة الرئيسية والأجندة سريعة جدًا على شبكات الفعاليات.
-- **دون اتصال خارجي:** الخطوط العربية (Tajawal/Cairo) ومحرّك ثلاثي الأبعاد
-  ومولّد QR كلها مضمّنة محليًا — لا اعتماد على أي CDN.
+- **دون اتصال خارجي:** الخط المستخدم هو Arial (خط نظام — لا يُحمَّل إطلاقًا)،
+  ومحرّك ثلاثي الأبعاد ومولّد QR مضمّنان محليًا — لا اعتماد على أي CDN.
 - **اللمس:** سحب بإصبع = تدوير، إصبعان = تكبير/تحريك، نقرة = اختيار قاعة.

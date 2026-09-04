@@ -13,8 +13,6 @@
     "vite": "^5.4.10"
   },
   "dependencies": {
-    "@fontsource/cairo": "^5.1.0",
-    "@fontsource/tajawal": "^5.1.0",
     "qrcode": "^1.5.4",
     "three": "^0.169.0"
   }
