@@ -119,10 +119,16 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   letter-spacing: .2px; color: #AC8B58; white-space: nowrap;
   unicode-bidi: isolate;
 }
-.partners-logos { display: flex; align-items: center; gap: clamp(6px, 1.9vw, 9px); }
+/* ثلاثة شعارات الآن، فالفجوة أضيق قليلًا كي يبقى الشريط سطرًا واحدًا على الجوال
+   Three logos now, so the gap is a touch tighter to keep the strip one line. */
+.partners-logos { display: flex; align-items: center; gap: clamp(5px, 1.5vw, 8px); }
 .partners-logos .pl { width: auto; display: block; opacity: .92; }
-.partners-logos .pl-tuwaiq { height: clamp(11px, 3.5vw, 14.5px); }
-.partners-logos .pl-saudi  { height: clamp(15px, 4.8vw, 20px); }
+.partners-logos .pl-tuwaiq { height: clamp(10px, 3.2vw, 13.5px); }
+.partners-logos .pl-saudi  { height: clamp(14px, 4.4vw, 18.5px); }
+/* كلمة بحروف كبيرة فقط، فارتفاعها هو ارتفاع الحرف — تُضبط أصغر كي تتّزن بصريًا
+   An all-caps wordmark, so its height is pure cap height; set smaller so it
+   sits optically level with the two lockups beside it. */
+.partners-logos .pl-humain { height: clamp(7.5px, 2.35vw, 10px); }
 /* الفاصل الرأسي بين الشعارين كما في الشريط | the rule between them, as on the strip */
 .partners-logos .pl-div {
   width: 1px; align-self: stretch; margin: 2px 0;
@@ -130,21 +136,36 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 
 /* ============================ HOME ============================ */
+/* الشاشة الرئيسية تُعرض كاملةً في إطار الجهاز — لا تمرير إطلاقًا.
+   كل المسافات والأحجام مقيسة بارتفاع الشاشة (vh) بحدّين: حدّ أدنى يبقيها
+   مقروءة على الهواتف القصيرة، وحدّ أعلى يمنعها من التضخّم على الشاشات الطويلة.
+
+   The home screen fits inside the viewport; it never scrolls. Every gap and
+   size is measured against the viewport height, clamped between a floor that
+   keeps it legible on a short phone and a ceiling that stops it ballooning on
+   a tall one. */
 .home { align-items: stretch; justify-content: flex-start; }
-.home .scroll { display: flex; flex-direction: column; padding: 0 20px calc(var(--nav-h) + var(--safe-b) + 24px); }
+.home .scroll {
+  display: flex; flex-direction: column; min-height: 0;
+  overflow: hidden;   /* لا تمرير في الرئيسية | the home screen does not scroll */
+  padding: 0 20px calc(var(--nav-h) + var(--safe-b) + clamp(8px, 2vh, 22px));
+}
 .hero {
-  margin-top: calc(var(--safe-t) + 3.5vh); text-align: center;
-  display: flex; flex-direction: column; align-items: center;
+  margin-top: calc(var(--safe-t) + clamp(6px, 2.2vh, 26px)); text-align: center;
+  display: flex; flex-direction: column; align-items: center; flex: none;
 }
 /* ---- قفل الشعار الرسمي | the official lockup ------------------------------
    صورة واحدة تحمل الأسطر الثلاثة: PIF Hackathon 2026 › INNOVATE › السطر العربي.
    لا تُقسَّم ولا يُعاد ترتيبها — القفل يُستخدم كوحدة واحدة.
    One piece of artwork carrying all three lines. It is never split, recoloured
    or re-typeset; the lockup travels as a single unit. */
-.hero .brandbar { margin-bottom: clamp(26px, 8.4vw, 42px); }  /* يفصل شريط الاعتماد عن شعار الحدث | keeps the credit strip clear of the event lockup */
+.hero .brandbar { margin-bottom: clamp(14px, 4vh, 42px); }  /* يفصل شريط الاعتماد عن شعار الحدث | keeps the credit strip clear of the event lockup */
 
 .lockup {
-  width: 100%; max-width: clamp(210px, 66vw, 268px);
+  /* العرض محكوم بالارتفاع أيضًا، فلا يزيح القفلُ البطاقاتِ خارج الشاشة القصيرة
+     Height caps the width too, so on a short screen the lockup can never push
+     the cards past the bottom edge. */
+  width: 100%; max-width: min(66vw, clamp(168px, 25vh, 268px));
   /* بدونه يفرض العرض الأصلي للصورة (860px) نفسه على عنصر الـflex ويتجاوز الشاشة
      without this the image's 860px intrinsic width becomes the flex item's
      automatic minimum and overflows past max-width */
@@ -159,7 +180,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   width: 100%; height: auto; display: block; aspect-ratio: 860 / 284;
 }
 
-.hero .meta { display: flex; gap: 10px; margin-top: 22px; flex-wrap: wrap; justify-content: center; }
+.hero .meta { display: flex; gap: 10px; margin-top: clamp(10px, 2.4vh, 22px); flex-wrap: wrap; justify-content: center; }
 .chip {
   display: inline-flex; align-items: center; gap: 6px;
   background: var(--g-50-10); border: 1px solid var(--border);
@@ -168,27 +189,84 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .chip .ic { color: var(--g-50); }
 
-.home-cards { display: flex; flex-direction: column; gap: 16px; margin-top: 34px; }
+/* الهوامش التلقائية تقسم الفراغ الفائض بالتساوي فوق البطاقتين وتحتهما، فتستقرّان
+   في وسط ما بين الترويسة والتذييل على الشاشات الطويلة، وتنكمش الهوامش إلى صفر
+   على القصيرة فتتكفّل الحشوة بأقلّ فاصل مقبول.
+   The auto margins split the leftover space evenly above and below the pair, so
+   the cards settle midway between the hero and the footer on a tall screen; on
+   a short one the margins collapse to nothing and the padding guarantees the
+   minimum gap. */
+.home-cards {
+  display: flex; flex-direction: column; flex: none;
+  gap: clamp(10px, 1.9vh, 16px);
+  margin-block: auto; padding-top: clamp(14px, 3.6vh, 34px);
+}
 .big-card {
   position: relative; overflow: hidden;
-  border-radius: var(--r-lg); padding: 24px;
+  border-radius: var(--r-lg); padding: clamp(14px, 2.6vh, 24px);
   background: linear-gradient(150deg, var(--g-400), var(--g-300));
   border: 1px solid var(--border); text-align: start;
-  display: flex; align-items: center; gap: 18px;
+  display: flex; align-items: center; gap: clamp(12px, 2vh, 18px);
   transition: transform .2s, border-color .2s;
 }
 .big-card:active { transform: scale(.98); }
 .big-card .glow { position: absolute; width: 160px; height: 160px; border-radius: 50%; filter: blur(50px); opacity: .35; top: -40px; left: -30px; }
 .big-card .cico {
-  width: 58px; height: 58px; border-radius: 18px; flex: none;
+  width: clamp(46px, 7.2vh, 58px); height: clamp(46px, 7.2vh, 58px);
+  border-radius: 18px; flex: none;
   display: grid; place-items: center; position: relative; z-index: 1;
 }
-.big-card h3 { font-family: var(--font-head); font-size: 21px; font-weight: 800; position: relative; z-index: 1; }
+.big-card h3 { font-family: var(--font-head); font-size: clamp(18px, 2.6vh, 21px); font-weight: 800; position: relative; z-index: 1; }
 .big-card p { color: var(--muted); font-size: 13px; margin-top: 4px; position: relative; z-index: 1; }
 .big-card .go { margin-inline-start: auto; color: var(--muted); position: relative; z-index: 1; }
 .big-card .body { position: relative; z-index: 1; }
 
-.home-foot { margin-top: 30px; text-align: center; color: var(--muted-2); font-size: 12px; line-height: 1.9; }
+/* التذييل يستقرّ عند الحافة السفلى: كل الفراغ الفائض ابتُلع في هوامش البطاقات
+   The footer lands on the bottom edge — the cards' auto margins have already
+   swallowed every pixel of slack above it. */
+.home-foot { padding-top: clamp(12px, 3vh, 30px); text-align: center; color: var(--muted-2); font-size: 12px; line-height: 1.9; }
+.home-foot .foot-cta { margin-top: clamp(6px, 1.5vh, 14px); }
+
+/* ---- سلّم الشاشات القصيرة | the short-viewport ladder ---------------------
+   كلما قصرت الشاشة تُقلَّم الطبقة الثانوية قبل الأساسية: أولًا تضيق أسطر
+   التذييل، ثم تُطوى أوصاف البطاقتين، ثم شريط التاريخ والمكان — والشعار
+   والبطاقتان يبقيان ظاهرين في كل الحالات، بلا تمرير.
+
+   As the viewport shortens, the secondary layer is trimmed before the primary
+   one: the footer tightens first, then the two card descriptions fold away,
+   then the date/venue chips. The lockup and the two cards survive every tier,
+   and nothing ever scrolls. */
+@media (max-height: 700px) {
+  .home-foot { line-height: 1.5; }
+}
+@media (max-height: 620px) {
+  .big-card p { display: none; }
+}
+@media (max-height: 560px) {
+  /* الشريط السفلي نفسه يقصر — هو أطول كتلة ثابتة في الشاشة
+     The bottom bar shrinks too; it is the tallest fixed block on screen. */
+  :root { --nav-h: 58px; }
+  .hero .meta { display: none; }
+  .home-foot { font-size: 11px; }
+}
+/* أقصر ما يُتوقّع — جوال قديم بالعرض: تُشدّ آخر الفراغات
+   The shortest case in practice, an older phone on its side: the last of the
+   breathing room is pulled in. */
+@media (max-height: 420px) {
+  .hero { margin-top: calc(var(--safe-t) + 6px); }
+  .hero .brandbar { margin-bottom: 12px; }
+  .lockup { max-width: min(46vw, 22vh); }
+  .home-cards { padding-top: 12px; }
+  .big-card { padding: 13px; }
+  .home-foot { padding-top: 10px; }
+}
+/* الجوال بالعرض: عرضٌ فائض وارتفاعٌ شحيح، فتقفان البطاقتان جنبًا إلى جنب
+   A phone on its side has width to spare and no height, so the two cards sit
+   side by side instead of stacked. */
+@media (max-height: 560px) and (min-width: 480px) {
+  .home-cards { flex-direction: row; }
+  .home-cards .big-card { flex: 1 1 0; min-width: 0; }
+}
 
 /* ============================ AGENDA ============================ */
 .agenda-head { padding: 4px 20px 8px; }

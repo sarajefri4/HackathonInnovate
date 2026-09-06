@@ -22,6 +22,7 @@ import pifEnUrl from './assets/pif-logo.png'
 import pifArUrl from './assets/pif-logo-ar.svg'
 import tuwaiqUrl from './assets/tuwaiq-academy.png'
 import saudiUrl from './assets/digital-saudi.png'
+import humainUrl from './assets/humain.png'
 
 /* الأخضر النعناعي المأخوذ من الشعار | the mint sampled from the wordmark */
 export const MINT = '#1CB68D'
@@ -31,6 +32,7 @@ export const PIF_EN_SRC = pifEnUrl
 export const PIF_AR_SRC = pifArUrl
 export const TUWAIQ_SRC = tuwaiqUrl
 export const DIGITAL_SAUDI_SRC = saudiUrl
+export const HUMAIN_SRC = humainUrl
 
 /* نسب الصور — تمنع القفزة أثناء التحميل | intrinsic ratios, to avoid reflow */
 export const LOCKUP_RATIO = '860 / 284'
@@ -67,23 +69,27 @@ export const pif = () => {
 }
 
 /* ----------------------------------------------------------------------------
- *  شعارا الشريكين — مقتطعان من شريط العرض الرسمي، أبيض على خلفية شفافة
- *  The two partner logos, lifted out of the official header strip as white
+ *  شعارات الشركاء — مقتطعة من شريط العرض الرسمي، أبيض على خلفية شفافة
+ *  The partner logos, lifted out of the official header strip as white
  *  artwork on transparency. Extracted at 3x so they stay crisp on retina.
  * ------------------------------------------------------------------------- */
 export const TUWAIQ = `<img class="pl pl-tuwaiq" src="${TUWAIQ_SRC}" alt="Tuwaiq Academy" width="456" height="90" decoding="async" />`
 export const DIGITAL_SAUDI = `<img class="pl pl-saudi" src="${DIGITAL_SAUDI_SRC}" alt="Digital Saudi" width="582" height="156" decoding="async" />`
+/* قُصّت الحواف الشفافة من هذا الملف حتى يقيسه الارتفاع كما يقيس أخويه
+   The transparent margin was cropped off this one, so sizing it by height
+   lands it optically level with the other two. */
+export const HUMAIN = `<img class="pl pl-humain" src="${HUMAIN_SRC}" alt="HUMAIN" width="432" height="68" decoding="async" />`
 
 /* ----------------------------------------------------------------------------
  *  شريط الهوية  |  The brand strip
  * ----------------------------------------------------------------------------
  *  نفس ترتيب شريط العرض الرسمي: صندوق الاستثمارات العامة في البداية، وفي
- *  النهاية عنوان "الشركاء الاستراتيجيون" وتحته شعارا طويق والسعودية الرقمية
- *  يفصل بينهما خط رأسي. يُستخدم على كل الشاشات بلا استثناء.
+ *  النهاية عنوان "الشركاء الاستراتيجيون" وتحته شعارات طويق والسعودية الرقمية
+ *  و«هيومين»، تفصل بينها خطوط رأسية. يُستخدم على كل الشاشات بلا استثناء.
  *
  *  The same arrangement as the official header strip: the fund leads, and the
- *  "Strategic Partners" line closes with Tuwaiq Academy and Digital Saudi
- *  beneath it, split by a rule. Used on every screen, unchanged.
+ *  "Strategic Partners" line closes with Tuwaiq Academy, Digital Saudi and
+ *  HUMAIN beneath it, split by rules. Used on every screen, unchanged.
  *
  *  `label` يُمرَّر من طبقة اللغة | the label is passed in from the i18n layer.
  * ------------------------------------------------------------------------- */
@@ -96,6 +102,8 @@ export const brandStrip = (label) => `
         ${TUWAIQ}
         <span class="pl-div" aria-hidden="true"></span>
         ${DIGITAL_SAUDI}
+        <span class="pl-div" aria-hidden="true"></span>
+        ${HUMAIN}
       </div>
     </div>
   </div>`

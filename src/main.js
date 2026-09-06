@@ -106,7 +106,7 @@ function renderHome() {
 
       <div class="home-foot">
         ${L(EVENT.host)}
-        <div style="margin-top:14px"><button class="chip" id="open-qr">${icon('sparkle', 15)} ${t('showQR')}</button></div>
+        <div class="foot-cta"><button class="chip" id="open-qr">${icon('sparkle', 15)} ${t('showQR')}</button></div>
       </div>
     </div>
   `
