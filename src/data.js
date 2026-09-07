@@ -24,9 +24,9 @@
 export const EVENT = {
   title: {
     ar: 'هاكاثون ابتكار صندوق الاستثمارات العامة',
-    en: 'PIF Innovation Hackathon',
+    en: 'PIF Innovate Hackathon',
   },
-  titleShort: { ar: 'هاكاثون ابتكار', en: 'Innovation Hackathon' },
+  titleShort: { ar: 'هاكاثون ابتكار', en: 'Innovate Hackathon' },
   subtitle: 'PIF Hackathon 2026', // لاتيني في الحالتين | Latin in both languages
   host: { ar: 'صندوق الاستثمارات العامة', en: 'Public Investment Fund' },
   dateLabel: { ar: '٩ - ١٠ سبتمبر ٢٠٢٦', en: '9 - 10 September 2026' },
@@ -267,16 +267,16 @@ export const ROOMS = [
 
   // ===== الطابق الأول — FIRST FLOOR =====
   {
-  id: 'coding',
-  floor: 'FF',
-  name: { ar: 'صالة البرمجة', en: 'Coding Lounge' },
-  category: 'core',
-  icon: 'code',
-  tagline: { ar: 'مساحة هادئة في الطابق الأول', en: 'A quiet space on the first floor' },
-  desc: {
-    ar: 'إن احتجت إلى تركيز أعمق بعيدًا عن حركة القاعة الرئيسية، فهذه الصالة تمنحك مساحة أهدأ للعمل بمقاعد مريحة، وتظلّ مفتوحة طوال أيام الهاكاثون.',
-    en: 'When you need deeper focus away from the activity of the main hall, this lounge offers a quieter place to work with comfortable seating, open throughout the hackathon.',
-  },
+id: 'coding',
+floor: 'FF',
+name: { ar: 'كهف البرمجة', en: 'Coding Cave' },
+category: 'core',
+icon: 'code',
+tagline: { ar: 'مساحة هادئة للتركيز في الطابق الأول', en: 'A quiet focus space on the first floor' },
+desc: {
+  ar: 'إن احتجت إلى تركيز أعمق بعيدًا عن حركة القاعة الرئيسية، فهذه المساحة تمنحك جوًّا أهدأ للعمل بمقاعد مريحة، وتبقى مفتوحة طوال أيام الهاكاثون.',
+  en: 'When you need deeper focus away from the buzz of the main hall, this space gives you a quieter place to work with comfortable seating, open throughout the hackathon.',
+},
   offerings: {
     ar: [
       'مقاعد مريحة للعمل',
@@ -285,7 +285,6 @@ export const ROOMS = [
     ],
     en: [
       'Comfortable seating for working',
-      'First floor, away from the main hall',
       'Open throughout the hackathon',
     ],
   },
@@ -297,21 +296,23 @@ export const ROOMS = [
   name: { ar: 'منطقة الغداء', en: 'Lunch Area' },
   category: 'hospitality',
   icon: 'utensils',
-  tagline: { ar: 'الغداء في الطابق الأول', en: 'Lunch, on the first floor' },
+  tagline: { ar: 'استراحة تُعيد الطاقة', en: 'A break to recharge' },
   desc: {
-    ar: 'المنطقة المخصّصة لاستراحة الغداء، حيث يُقدَّم الغداء للجميع.',
-    en: 'The area set aside for the lunch break, where lunch is served for everyone.',
+    ar: 'المنطقة المخصّصة لاستراحة الغداء، بمقاعد تتّسع للجميع وفرصة لالتقاط الأنفاس بين جلسات العمل.',
+    en: 'The area set aside for the lunch break, with seating for everyone and a chance to catch your breath between work sessions.',
   },
   offerings: {
     ar: [
-      'الغداء يُقدَّم هنا',
+      'وجبة غداء يوميًا',
+      'مساحة للجلوس والاستراحة',
     ],
     en: [
-      'Lunch is served here',
+      'A daily lunch',
+      'Space to sit and take a break',
     ],
   },
-    plan: { x: -11, z: 15.5, w: 18, d: 18, h: 3.6 },
-  },
+  plan: { x: -11, z: 15.5, w: 18, d: 18, h: 3.6 },
+},
 ]
 
 /* ----------------------------------------------------------------------------
