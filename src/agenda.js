@@ -1,4 +1,4 @@
-import { AGENDA, DAYS, KINDS, ROOMS, EVENT } from './data.js'
+import { AGENDA, DAYS, KINDS, ROOMS, EVENT, SECTIONS } from './data.js'
 import { icon } from './icons.js'
 import { brandStrip } from './brand.js'
 import { L, t } from './i18n.js'
@@ -21,7 +21,15 @@ const timeRange = (start, end) => {
     : `${h12(start)} ${mer(start)} – ${h12(end)} ${mer(end)}`
 }
 
-export function renderAgenda(root, { onGotoRoom }) {
+/* شريط القسم — نسخة الشاشة من الشريط الملوّن في الأجندة الرسمية
+   The section band — the on-screen version of the official agenda's coloured
+   header row. Its solid ground also masks the timeline rail running behind it. */
+const sectionBand = (sec) => `
+  <div class="sec-band reveal" style="--sc:${sec.color}; background:${sec.color}26">
+    ${L(sec.title)}
+  </div>`
+
+export function renderAgenda(root, { onGotoRoom, day }) {
   root.innerHTML = `
     <div class="topbar">
       ${brandStrip(t('partnersLabel'))}
@@ -36,7 +44,10 @@ export function renderAgenda(root, { onGotoRoom }) {
 
   const switchEl = root.querySelector('#day-switch')
   const timelineEl = root.querySelector('#timeline')
-  let active = DAYS[0].id
+  /* اليوم المعروض يُمرَّر من الخارج كي ينجو من تبديل اللغة — كانت الأجندة ترتدّ
+     إلى اليوم الأول عند كل تبديل. | The visible day is passed in so it survives
+     a language switch; the view used to snap back to Day 1 on every toggle. */
+  let active = DAYS.some((d) => d.id === day) ? day : DAYS[0].id
   let io = null
 
   /* المراقب لا يعمل والشاشة مخفية (display:none) — لذا نعيد ربطه عند كل عرض.
@@ -59,20 +70,42 @@ export function renderAgenda(root, { onGotoRoom }) {
 
   function paint() {
     const items = AGENDA.filter((s) => s.day === active)
+    /* حدود الأقسام تُحسب قبل الرسم: أول بطاقة في القسم وآخر بطاقة فيه. الخط
+       الزمني يُرسم قطعةً داخل كل بطاقة، فيبدأ من أول نقطة وينتهي عند آخر نقطة
+       ولا يمرّ خلف شريط القسم أصلًا.
+       The section runs are resolved before painting — the first and last slot of
+       each run. The rail is drawn as a segment inside every slot, so it starts
+       on a section's first dot and ends on its last, and never runs behind the
+       band at all. */
+    const startsRun = items.map((s, i) => i === 0 || s.section !== items[i - 1].section)
+    const endsRun = items.map((s, i) => i === items.length - 1 || s.section !== items[i + 1].section)
+    let openSection = null
     timelineEl.innerHTML = items
-      .map((s) => {
+      .map((s, i) => {
         const kind = KINDS[s.kind] || KINDS.stage
         const room = roomById(s.room)
         // الأجندة الرسمية سطر واحد لكل نشاط — الوصف اختياري ولا تُترك فقرة فارغة
         // The official agenda is one line per activity; desc is optional.
         const desc = s.desc ? L(s.desc) : ''
+        /* شريط القسم يُطبع عند أول نشاط فيه فقط — كما في الأجندة الرسمية، حيث
+           يفصل شريط "حفل الختام" الذهبي بين فقرتَي اليوم الثاني.
+           The band is printed on a section's first activity only, exactly as on
+           the official agenda, where the gold "Closing Ceremony" band splits
+           Day 2 in two. */
+        const sec = s.section !== openSection ? SECTIONS[s.section] : null
+        if (sec) openSection = s.section
         return `
-        <div class="slot reveal">
+        ${sec ? sectionBand(sec) : ''}
+        <div class="slot reveal${startsRun[i] ? ' run-start' : ''}${endsRun[i] ? ' run-end' : ''}">
           <div class="dot" style="color:${kind.color}"></div>
           <div class="card" style="--kc:${kind.color}">
             <!-- الوقت داخل البطاقة: عمود جانبي ضيّق كان يقصّ "10:00" على الجوال
                  The time lives inside the card; the old 52px rail clipped it. -->
             <div class="when">
+              <!-- البادئة خارج عزل الاتجاه: تُقرأ بلغة الواجهة بينما يبقى النطاق لاتينيًا
+                   The prefix sits outside the LTR isolate, so it reads in the UI
+                   language while the range itself stays Latin. -->
+              ${s.timePrefix ? `<span class="pre">${L(s.timePrefix)}</span>` : ''}
               <span class="range">${timeRange(s.start, s.end)}</span>
               <span class="tag" style="background:${kind.color}22;color:${kind.color}">${L(kind.label)}</span>
             </div>
@@ -110,6 +143,16 @@ export function renderAgenda(root, { onGotoRoom }) {
 
   paint()
 
-  // يستدعيه المُوجِّه بعد إظهار الشاشة | called by the router once the view is visible
-  return { observeReveals }
+  /* observeReveals يستدعيه المُوجِّه بعد إظهار الشاشة، و destroy قبل إعادة البناء
+     كي لا يبقى مراقب معلَّق على عقد مُزالة.
+     observeReveals is called by the router once the view is visible; destroy is
+     called before a rebuild so no observer is left holding detached nodes. */
+  return {
+    observeReveals,
+    getDay: () => active,
+    destroy() {
+      if (io) io.disconnect()
+      io = null
+    },
+  }
 }

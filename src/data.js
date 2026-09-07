@@ -11,10 +11,12 @@
  *      Every user-facing string is a { ar, en } pair. Fill in both when adding
  *      content; the UI picks the right one via L() in i18n.js.
  *
- *  ⚠️  الأوقات والعناوين في الأجندة مبدئية للعرض — استبدلها بالجدول الرسمي.
- *      Agenda times/titles below are realistic placeholders — swap in the
- *      official schedule when ready. Room descriptions are drawn from the
- *      DGA Innovation Hub brand guide + the venue floor plan.
+ *  📋  الأجندة أدناه منقولة عن شريحتَي الأجندة الرسميتين (اليوم الأول والثاني).
+ *      عدّلها هنا وحدها إن تغيّر الجدول. أوصاف الغرف مأخوذة من دليل هوية
+ *      مركز الابتكار ومن مخطط المكان.
+ *      The agenda below is transcribed from the two official agenda slides.
+ *      If the schedule changes, this is the only place to edit it. Room
+ *      descriptions come from the Innovation Hub brand guide + the floor plan.
  *
  *  إحداثيات الغرف (plan) بوحدات المخطط: x/z = المركز، w/d = العرض/العمق،
  *  h = الارتفاع. المنشأة تمتد تقريبًا من x:-48..48 و z:-24..27.
@@ -112,7 +114,7 @@ export const ROOMS = [
       'محطة قهوة',
     ],
     en: [
-      'Day 1 breakfast',
+      'Breakfast',
       'Refreshments all day',
       'Coffee station',
     ],
@@ -139,7 +141,7 @@ export const ROOMS = [
     ],
     en: [
       'Sudoku and logic puzzles',
-      'Quick-fire challenges',
+      'Quick challenges',
       'Open all day',
     ],
   },
@@ -157,14 +159,8 @@ export const ROOMS = [
     en: "A private lounge reserved for the event's invited guests, in use ahead of the closing ceremony.",
   },
   offerings: {
-    ar: [
-      'مخصّص لضيوف الحدث',
-      
-    ],
-    en: [
-      'Reserved for invited guests',
-    
-    ],
+    ar: ['مخصّص لضيوف الحدث'],
+    en: ['Reserved for invited guests'],
   },
     plan: { x: 11, z: -10.5, w: 9, d: 8, h: 3.2 },
   },
@@ -176,18 +172,12 @@ export const ROOMS = [
     icon: 'star',
     tagline: { ar: 'لضيوف الحدث', en: 'For invited guests' },
     desc: {
-      ar: 'المجلس الثاني لضيوف الحدث، بجوار الأول.',
-      en: 'The second guest lounge, next to the first.',
+      ar: 'المجلس الثاني لضيوف الحدث.',
+      en: 'The second guest lounge.',
     },
     offerings: {
-      ar: [
-        'مخصّص لضيوف الحدث',
-        
-      ],
-      en: [
-        'For invited guests',
-
-      ],
+      ar: ['مخصّص لضيوف الحدث'],
+      en: ['For invited guests'],
     },
     plan: { x: 22, z: -9.9, w: 8, d: 7, h: 3.2 },
   },
@@ -247,20 +237,10 @@ export const ROOMS = [
     name: { ar: 'بوابة الترحيب', en: 'Welcome Gate' },
     category: 'entry',
     icon: 'gate',
-    tagline: { ar: 'مدخل الحدث', en: 'The event entrance' },
+    tagline: { ar: 'مدخل الهاكاثون', en: 'Hackathon entrance' },
     desc: {
-      ar: 'مدخل الفعالية. من هنا تدخل مركز الابتكار وتتّجه إلى التسجيل.',
+      ar: 'نقطة الدخول إلى مركز الابتكار، ومنها تبدأ بالتسجيل.',
       en: 'The main entrance to the Hackathon.',
-    },
-    offerings: {
-      ar: [
-        'مدخل الحدث',
-        'يؤدي إلى منطقة التسجيل',
-      ],
-      en: [
-        'The way in',
-        'Leads to the Registration Area',
-      ],
     },
     plan: { x: 13, z: 24.5, w: 14, d: 6, h: 3 },
   },
@@ -280,7 +260,6 @@ desc: {
   offerings: {
     ar: [
       'مقاعد مريحة للعمل',
-      'الطابق الأول، بعيدًا عن القاعة الرئيسية',
       'مفتوحة طوال أيام الهاكاثون',
     ],
     en: [
@@ -291,25 +270,19 @@ desc: {
     plan: { x: 41.5, z: 16.5, w: 15, d: 16, h: 5 },
   },
   {
-  id: 'lunch',
+id: 'lunch',
   floor: 'FF',
   name: { ar: 'منطقة الغداء', en: 'Lunch Area' },
   category: 'hospitality',
   icon: 'utensils',
-  tagline: { ar: 'استراحة تُعيد الطاقة', en: 'A break to recharge' },
+  tagline: { ar: 'استراحة الغداء', en: 'The lunch break' },
   desc: {
-    ar: 'المنطقة المخصّصة لاستراحة الغداء، بمقاعد تتّسع للجميع وفرصة لالتقاط الأنفاس بين جلسات العمل.',
-    en: 'The area set aside for the lunch break, with seating for everyone and a chance to catch your breath between work sessions.',
+    ar: 'المنطقة المخصّصة لتناول الغداء.',
+    en: 'The area set aside for lunch.',
   },
   offerings: {
-    ar: [
-      'وجبة غداء يوميًا',
-      'مساحة للجلوس والاستراحة',
-    ],
-    en: [
-      'A daily lunch',
-      'Space to sit and take a break',
-    ],
+    ar: ['وجبة غداء'],
+    en: ['Lunch'],
   },
   plan: { x: -11, z: 15.5, w: 18, d: 18, h: 3.6 },
 },
@@ -342,134 +315,192 @@ export const FOOTPRINT = [
 ]
 
 /* ----------------------------------------------------------------------------
- *  الأجندة  |  AGENDA
- *  room = معرّف الغرفة المرتبطة (للانتقال إلى المخطط)
+ *  الأيام  |  DAYS
  * ------------------------------------------------------------------------- */
 export const DAYS = [
   { id: 'd1', name: { ar: 'اليوم الأول', en: 'Day One' }, date: { ar: '٩ سبتمبر', en: '9 September' } },
   { id: 'd2', name: { ar: 'اليوم الثاني', en: 'Day Two' }, date: { ar: '١٠ سبتمبر', en: '10 September' } },
 ]
 
+/* ----------------------------------------------------------------------------
+ *  أقسام الأجندة  |  AGENDA SECTIONS
+ * ----------------------------------------------------------------------------
+ *  الشرائط الملوّنة نفسها الموجودة في الأجندة الرسمية. اليوم الأول قسم واحد،
+ *  واليوم الثاني قسمان: العروض والتقييم ثم حفل الختام بشريطه الذهبي.
+ *  الترتيب يتبع ترتيب الأنشطة في AGENDA؛ يُطبع العنوان عند كل تغيّر قسم.
+ *
+ *  The same coloured bands the official agenda uses. Day 1 is one section, Day 2
+ *  is two: the demo block, then the closing ceremony on its gold band. Order
+ *  follows AGENDA itself — a heading is printed wherever the section changes.
+ * ------------------------------------------------------------------------- */
+export const SECTIONS = {
+  s1: { title: { ar: 'اليوم الأول — الافتتاح وعمل الفرق', en: 'Day 1 — Opening & Team Hacking' }, color: '#1CB68D' },
+  s2: { title: { ar: 'اليوم الثاني — العروض والتقييم', en: 'Day 2 — Demo & Evaluation' }, color: '#1CB68D' },
+  /* الذهبي مأخوذ عيّنةً من شريط الهوية الرسمي | gold sampled off the brand strip */
+  s3: { title: { ar: 'حفل الختام', en: 'Closing Ceremony' }, color: '#C79E63' },
+}
+
+/* ----------------------------------------------------------------------------
+ *  الأجندة  |  AGENDA
+ * ----------------------------------------------------------------------------
+ *  منقولة حرفيًا عن شريحتَي الأجندة الرسميتين (اليوم الأول والثاني).
+ *  Transcribed from the two official agenda slides, row for row.
+ *
+ *  room       = معرّف الغرفة المرتبطة (زر الانتقال إلى المخطط)
+ *  section    = القسم الذي ينتمي إليه النشاط | which SECTIONS band it sits under
+ *  timePrefix = بادئة اختيارية قبل الوقت ("قبل ١٠:٠٠") | optional time prefix
+ *  end        = يُحذف للأنشطة ذات الوقت الواحد | omitted for single-time rows
+ * ------------------------------------------------------------------------- */
 export const AGENDA = [
   // ===== اليوم الأول — الافتتاح وعمل الفرق | DAY 1 — OPENING & TEAM HACKING =====
   {
-    day: 'd1', start: '09:00', end: '10:00', room: 'registration', icon: 'gate', kind: 'break',
+    day: 'd1', section: 's1', start: '09:00', end: '10:00', room: 'registration', icon: 'gate', kind: 'break',
     title: { ar: 'التسجيل والترحيب', en: 'Registration & Welcome' },
-    desc: { ar: 'استلم شارتك وتعرّف على مكان فريقك', en: 'Collect your badge and find your team table' },
   },
   {
-    day: 'd1', start: '09:00', end: '10:00', room: 'welcome', icon: 'map', kind: 'break',
+    day: 'd1', section: 's1', start: '09:00', end: '10:00', room: 'welcome', icon: 'map', kind: 'break',
     title: { ar: 'جولات مركز الابتكار', en: 'Innovation Center Tours' },
     desc: { ar: 'اختياري', en: 'Optional' },
   },
   {
-    day: 'd1', start: '10:00', end: '10:15', room: 'hackathon', icon: 'mic', kind: 'stage',
-    title: { ar: 'انطلاق الهاكاثون', en: 'Hackathon Kick-off' },
-    desc: { ar: 'نظرة عامة على تجربة اليومين', en: 'What to expect over the two days' },
+    day: 'd1', section: 's1', start: '10:00', end: '10:15', room: 'hackathon', icon: 'mic', kind: 'stage',
+    title: { ar: 'الافتتاح', en: 'Hackathon Kick-off' },
+    desc: { ar: 'نظرة عامة على تجربة الهاكاثون', en: 'Introduction and an overview of the hackathon' },
   },
   {
-    day: 'd1', start: '10:15', end: '10:30', room: 'hackathon', icon: 'target', kind: 'stage',
-    title: { ar: 'التعمّق في التحدي', en: 'Challenge Deep Dive' },
-    desc: { ar: 'تفاصيل تحدي مساهمة', en: 'The Musahama challenge in detail' },
+    day: 'd1', section: 's1', start: '10:15', end: '10:20', room: 'hackathon', icon: 'mic', kind: 'stage',
+    title: {
+      ar: 'كلمة رئيس قسم الذكاء الاصطناعي وتحليل البيانات',
+      en: 'Remarks by PIF\u2019s Head of Data & AI',
+    },
+    desc: { ar: 'خالد العصيمي — صندوق الاستثمارات العامة', en: 'Khaled AlQusaimi' },
   },
   {
-    day: 'd1', start: '10:30', end: '10:40', room: 'hackathon', icon: 'sparkle', kind: 'stage',
-    title: { ar: 'أدوات الابتكار', en: 'Innovation Tools' },
-    desc: { ar: 'أدوات ومنهجيات تساعدك على بناء حلّك', en: 'Tools and methodologies to help you build' },
+    day: 'd1', section: 's1', start: '10:20', end: '10:30', room: 'hackathon', icon: 'target', kind: 'stage',
+    title: { ar: 'نظرة عامة على تحدي مساهمة', en: 'Challenge Deep Dive' },
+    desc: { ar: 'نايف النجيدي', en: 'Naif Alnujaydi' },
+  },
+ {
+  day: 'd1', section: 's1', start: '10:30', end: '10:40', room: 'hackathon', icon: 'sparkle', kind: 'stage',
+  title: { ar: 'عرض تعريفي بـ HUMAIN Code', en: 'HUMAIN Code Demo' },
+  desc: {
+    ar: 'جولة سريعة على أداة HUMAIN Code وكيفية استخدامها خلال الهاكاثون.',
+    en: 'A quick walkthrough of HUMAIN Code and how to use it during the hackathon.',
+  },
+},
+  {
+    day: 'd1', section: 's1', start: '10:40', end: '12:00', room: 'hackathon', icon: 'code', kind: 'build',
+    title: { ar: 'عمل الفرق وتطوير الأفكار', en: 'Team Hacking & Idea Development' },
   },
   {
-    day: 'd1', start: '10:40', end: '12:00', room: 'hackathon', icon: 'code', kind: 'build',
-    title: { ar: 'عمل الفرق وتطوير الأفكار', en: 'Team Work: Idea Development' },
-  },
-  {
-    day: 'd1', start: '12:00', end: '13:00', room: 'hackathon', icon: 'users', kind: 'build',
+    day: 'd1', section: 's1', start: '12:00', end: '13:00', room: 'hackathon', icon: 'users', kind: 'build',
     title: { ar: 'جولة الإرشاد الأولى', en: 'Mentoring Round 1' },
-    desc: { ar: 'يمرّ المرشدون على الطاولات للاطّلاع على ما وصل إليه كل فريق وتقديم الدعم اللازم.', en: 'Mentors circulate between the tables to see where each team has reached and offer support.' },
+    desc: { ar: 'تنقّل المرشدين بين الفرق', en: 'Mentors rotate across teams' },
   },
   {
-    day: 'd1', start: '13:00', end: '13:30', room: 'lunch', icon: 'utensils', kind: 'break',
+    day: 'd1', section: 's1', start: '13:00', end: '13:30', room: 'lunch', icon: 'utensils', kind: 'break',
     title: { ar: 'الغداء وصلاة الظهر', en: 'Lunch & Dhuhr Prayer' },
   },
   {
-    day: 'd1', start: '13:30', end: '15:00', room: 'hackathon', icon: 'code', kind: 'build',
-    title: { ar: 'مواصلة تطوير الحلول', en: 'Team Work: Building the Solution' },
+    day: 'd1', section: 's1', start: '13:30', end: '15:00', room: 'hackathon', icon: 'code', kind: 'build',
+    title: { ar: 'تطوير الحلول وعمل الفرق', en: 'Team Hacking: Continued Development' },
   },
   {
-    day: 'd1', start: '15:00', end: '16:00', room: 'hackathon', icon: 'users', kind: 'build',
+    day: 'd1', section: 's1', start: '15:00', end: '16:00', room: 'hackathon', icon: 'users', kind: 'build',
     title: { ar: 'جولة الإرشاد الثانية', en: 'Mentoring Round 2' },
-    desc: { ar: 'الجولة الثانية والأخيرة للمرشدين، لمراجعة الحلول وتقديم الملاحظات النهائية.', en: 'The mentors\' second and final round, reviewing solutions and sharing their closing feedback.' },
+    desc: { ar: 'مراجعة الحلول وتطويرها', en: 'Solution review and refinement' },
   },
   {
-    day: 'd1', start: '16:00', end: '17:00', room: 'hackathon', icon: 'code', kind: 'build',
-    title: { ar: 'استكمال النماذج الأولية', en: 'Team Work: Prototype Push' },
+    day: 'd1', section: 's1', start: '16:00', end: '17:00', room: 'hackathon', icon: 'code', kind: 'build',
+    title: { ar: 'استكمال تطوير النماذج الأولية', en: 'Team Hacking: Continued Development' },
   },
   {
-    day: 'd1', start: '16:55', end: '17:00', room: 'hackathon', icon: 'flag', kind: 'stage',
-    title: { ar: 'ختام اليوم الأول', en: 'Day 1 Wrap-Up' },
-    desc: { ar: 'ما ينتظركم في اليوم الثاني', en: 'What to expect on Day 2' },
+    /* بلا وقت نهاية في الأجندة الرسمية | no end time on the official agenda */
+    day: 'd1', section: 's1', start: '16:55', room: 'hackathon', icon: 'flag', kind: 'stage',
+    title: { ar: 'ختام اليوم الأول وتوقعات اليوم الثاني', en: 'Day 1 Wrap-Up & Day 2 Expectations' },
   },
   {
-    day: 'd1', start: '17:00', end: '19:00', room: 'coding', icon: 'clock', kind: 'build',
-    title: { ar: 'مركز الابتكار يبقى مفتوحًا', en: 'Innovation Hub Stays Open' },
-    desc: { ar: 'للفرق الراغبة في مواصلة العمل (اختياري)', en: 'Optional, for teams who want to keep going' },
-  },
- 
-  // ===== اليوم الثاني — العروض والختام | DAY 2 — DEMOS & CLOSING =====
-  {
-    day: 'd2', start: '10:00', end: '11:30', room: 'coding', icon: 'clock', kind: 'build',
-    title: { ar: 'مركز الابتكار متاح للفرق', en: 'Innovation Hub Open for Teams' },
-    desc: { ar: 'عمل نهائي وتدريب على العرض', en: 'Final work and pitch rehearsal' },
-  },
-  {
-    day: 'd2', start: '11:30', end: '12:00', room: 'hackathon', icon: 'target', kind: 'build',
-    title: { ar: 'اللمسات الأخيرة والجاهزية التقنية', en: 'Final Touches & Technical Check' },
-    
-  },
-  {
-    day: 'd2', start: '12:00', end: '12:15', room: 'hackathon', icon: 'mic', kind: 'stage',
-    title: { ar: 'انطلاق فقرة العروض', en: 'Demo Kick-off' },
-    desc: { ar: 'التعريف بلجنة التحكيم وإرشادات العرض', en: 'Meet the judges and hear the presentation guidelines' },
-  },
-  {
-    day: 'd2', start: '12:15', end: '14:15', room: 'hackathon', icon: 'mic', kind: 'stage',
-    title: { ar: 'عروض حلول الفرق', en: 'Team Solution Presentations' },
-    desc: { ar: '', en: 'Teams present their solutions to the judging panel on stage.' },
-  },
-  {
-    day: 'd2', start: '14:15', end: '14:45', room: 'coffee', icon: 'clock', kind: 'break',
-    title: { ar: 'تعرض الفرق حلولها أمام لجنة التحكيم على المسرح.', en: 'Break While the Judges Deliberate' },
-  },
-  {
-    day: 'd2', start: '14:45', end: '15:00', room: 'hackathon', icon: 'flag', kind: 'break',
-    title: { ar: 'الاستعداد لحفل الختام', en: 'Take Your Seats for the Closing Ceremony' },
-  },
-  {
-    day: 'd2', start: '15:00', end: '15:20', room: 'hackathon', icon: 'sparkle', kind: 'stage',
-    title: { ar: 'افتتاح حفل الختام', en: 'Closing Ceremony Opening' },
-  },
-  
-  ,
-  {
-    day: 'd2', start: '15:20', end: '15:25', room: 'hackathon', icon: 'mic', kind: 'stage',
-    title: {
-      ar: 'كلمة مدير قسم الرقمية والتقنية لصندوق الاستثمارات العامة',
-      en: 'Remarks by PIFs Head of Digital & Technology',
-    },
+    day: 'd1', section: 's1', start: '17:00', end: '19:00', room: 'coding', icon: 'clock', kind: 'build',
+    title: { ar: 'استمرار إتاحة مركز الابتكار', en: 'Innovation Hub Remains Open' },
+    desc: { ar: 'للفرق الراغبة في مواصلة العمل', en: 'For teams who wish to continue' },
   },
 
+  // ===== اليوم الثاني — العروض والتقييم | DAY 2 — DEMO & EVALUATION =====
   {
-    day: 'd2', start: '15:30', end: '15:55', room: 'hackathon', icon: 'trophy', kind: 'stage',
+    day: 'd2', section: 's2', start: '10:00', end: '11:30', room: 'coding', icon: 'clock', kind: 'build',
+    timePrefix: { ar: 'قبل', en: 'Before' },
+    title: { ar: 'مركز الابتكار متاح', en: 'Innovation Hub Open' },
+    desc: { ar: 'عمل نهائي اختياري، وتدريب، واستعداد', en: 'Optional final work, rehearsal & preparation' },
+  },
+  {
+    day: 'd2', section: 's2', start: '11:30', end: '12:00', room: 'hackathon', icon: 'target', kind: 'build',
+    title: {
+      ar: 'استكمال الحل والتأكد من الجاهزية التقنية وصلاة الظهر',
+      en: 'Solution Finalization, Technical Readiness & Dhuhr Prayer',
+    },
+  },
+  {
+    day: 'd2', section: 's2', start: '12:00', end: '12:15', room: 'hackathon', icon: 'mic', kind: 'stage',
+    title: { ar: 'انطلاق فقرة العروض', en: 'Demo Kickoff' },
+    desc: {
+      ar: 'التعريف بلجنة التحكيم وإرشادات تقديم العروض',
+      en: 'Judges introduction & presentation guidelines',
+    },
+  },
+  {
+    day: 'd2', section: 's2', start: '12:15', end: '14:15', room: 'hackathon', icon: 'mic', kind: 'stage',
+    title: { ar: 'عروض حلول الفرق', en: 'Team Solution Presentations' },
+  },
+  {
+    day: 'd2', section: 's2', start: '14:15', end: '14:45', room: 'hackathon', icon: 'users', kind: 'break',
+    title: {
+      ar: 'نقاش لجنة التحكيم واختيار أفضل ٥ فرق',
+      en: 'Judges\u2019 Deliberation & Top 5 Finalists Selection',
+    },
+  },
+  {
+    day: 'd2', section: 's2', start: '14:45', end: '15:00', room: 'hackathon', icon: 'flag', kind: 'break',
+    title: { ar: 'تجهيز حفل الختام', en: 'Closing Ceremony Setup' },
+  },
+
+  // ===== حفل الختام | CLOSING CEREMONY =====
+  {
+    day: 'd2', section: 's3', start: '15:00', end: '15:10', room: 'hackathon', icon: 'sparkle', kind: 'stage',
+    title: { ar: 'افتتاح حفل الختام', en: 'Closing Ceremony Opening' },
+  },
+  {
+    day: 'd2', section: 's3', start: '15:10', end: '15:15', room: 'hackathon', icon: 'play', kind: 'stage',
+    title: { ar: 'عرض فيديو', en: 'Hackathon Video Recap' },
+    desc: { ar: 'أبرز لحظات الهاكاثون', en: 'The highlights of the two days' },
+  },
+  {
+    day: 'd2', section: 's3', start: '15:15', end: '15:50', room: 'hackathon', icon: 'mic', kind: 'stage',
+    title: { ar: 'عرض الحلول الـ٦ المؤهلة', en: 'Top 6 Finalists Live Presentations & Demos' },
+    desc: { ar: '٣ دقائق لكل فريق', en: '3 minutes each' },
+  },
+  {
+    day: 'd2', section: 's3', start: '15:50', end: '15:55', room: 'hackathon', icon: 'mic', kind: 'stage',
+    title: { ar: 'كلمة مدير قسم الرقمية والتقنية', en: 'PIF D&T Head Remarks' },
+  },
+  {
+    day: 'd2', section: 's3', start: '15:55', end: '16:00', room: 'hackathon', icon: 'star', kind: 'stage',
+    title: { ar: 'تكريم الشركاء الاستراتيجيين', en: 'Strategic Partners Recognition' },
+  },
+  {
+    day: 'd2', section: 's3', start: '16:00', end: '16:20', room: 'hackathon', icon: 'trophy', kind: 'stage',
     title: { ar: 'إعلان الفائزين وتسليم الجوائز', en: 'Winners Announcement & Awards' },
   },
   {
-    day: 'd2', start: '15:55', end: '16:00', room: 'hackathon', icon: 'star', kind: 'stage',
+    day: 'd2', section: 's3', start: '16:20', end: '16:25', room: 'hackathon', icon: 'camera', kind: 'stage',
     title: { ar: 'الصورة الجماعية والختام', en: 'Group Photo & Closing' },
   },
   {
-    day: 'd2', start: '16:00', end: '17:00', room: 'hackathon', icon: 'sofa', kind: 'break',
-    title: { ar: 'التواصل والمغادرة', en: 'Networking & Departure' },
-     },
-
+    day: 'd2', section: 's3', start: '16:30', end: '17:00', room: 'hackathon', icon: 'sofa', kind: 'break',
+    title: {
+      ar: 'التواصل والمقابلات الإعلامية والمغادرة',
+      en: 'Networking / Media Interviews / Departure',
+    },
+  },
 ]
 
 /* أنواع الجلسات — للألوان في الأجندة | session kinds, drive the agenda colours */

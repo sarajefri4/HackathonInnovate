@@ -121,7 +121,15 @@ function renderHome() {
 /* ----------------------------- AGENDA ----------------------------- */
 let agendaApi = null
 function renderAgendaView() {
+  /* تبديل اللغة يعيد بناء الشاشة — نحمل اليوم المعروض معنا ونفكّ المراقب القديم،
+     وإلا ارتدّت الأجندة إلى اليوم الأول وبقي مراقب معلّق على عقد مُزالة.
+     A language switch rebuilds the view, so the visible day is carried across
+     and the previous observer is torn down; without this the agenda snapped
+     back to Day 1 and left an observer holding the detached nodes. */
+  const day = agendaApi ? agendaApi.getDay() : undefined
+  if (agendaApi) agendaApi.destroy()
   agendaApi = renderAgenda(views.agenda, {
+    day,
     onGotoRoom: async (roomId, floorId) => {
       show('floor')
       await ensureFloor() // resolves once three.js + scene are ready
@@ -282,14 +290,31 @@ function renderFloorChrome() {
   })
 }
 
+/* يُحلّ دائمًا ولا يرفض أبدًا: بدون هذا كان فشل WebGL (جهاز قديم أو تسريع
+   معطّل) يترك الدوّارة تدور إلى الأبد، ويجعل `await ensureFloor()` في زر الموقع
+   داخل الأجندة يرمي فيتوقّف الانتقال إلى المخطط بلا أي أثر ظاهر.
+   Always resolves, never rejects. Without this a WebGL failure — an old device,
+   or acceleration switched off — left the spinner turning forever, and made the
+   `await ensureFloor()` in the agenda's location chip throw, so tapping a venue
+   silently did nothing at all. */
 function ensureFloor() {
   if (floorReady) return floorReady
   floorReady = (async () => {
-    const canvas = app.querySelector('#three-canvas')
-    const { createFloor3D } = await import('./floor3d.js')
-    floor3d = createFloor3D(canvas, { onSelect: showSheet })
-    await floor3d.init(activeFloor)
-    loadingEl.classList.add('hide')
+    try {
+      const canvas = app.querySelector('#three-canvas')
+      const { createFloor3D } = await import('./floor3d.js')
+      floor3d = createFloor3D(canvas, { onSelect: showSheet })
+      await floor3d.init(activeFloor)
+      loadingEl.classList.add('hide')
+      return true
+    } catch (err) {
+      console.error('[floor] 3D plan unavailable', err)
+      floor3d = null
+      // القائمة تبقى صالحة للتصفّح، فنستبدل الدوّارة برسالة بدل تركها تدور
+      // The list is still browsable, so the spinner is swapped for a message.
+      loadingEl.innerHTML = `<p class="floor-fallback">${t('floorUnavailable')}</p>`
+      return false
+    }
   })()
   return floorReady
 }
@@ -307,7 +332,10 @@ function showSheet(room) {
   }
   const cat = CATEGORIES[room.category]
   const floorName = L((FLOORS.find((f) => f.id === room.floor) || {}).name || '')
-  const offerings = L(room.offerings) || []
+  /* بعض المساحات بلا قائمة (أو فيها مدخلات فارغة) — لا يُطبع العنوان بلا محتوى
+     Some spaces carry no list at all, and a couple hold blank entries; the
+     heading is not printed over an empty block. */
+  const offerings = (L(room.offerings) || []).filter((o) => o && String(o).trim())
   sheet.innerHTML = `
     <div class="grab"></div>
     <button class="close" id="sheet-close" title="${t('close')}" aria-label="${t('close')}">${icon('close', 20)}</button>
@@ -323,10 +351,11 @@ function showSheet(room) {
     <span class="sh-floor">${icon('layers', 13)} ${floorName}</span>
     <div class="tagline">${L(room.tagline)}</div>
     <p class="desc">${L(room.desc)}</p>
+    ${offerings.length ? `
     <div class="off-title">${icon('sparkle', 18)} ${t('offerings')}</div>
     <div class="off">
       ${offerings.map((o) => `<div class="row"><span class="b" style="background:${cat.color};box-shadow:0 0 8px ${cat.color}"></span>${o}</div>`).join('')}
-    </div>
+    </div>` : ''}
   `
   sheet.querySelector('#sheet-close').addEventListener('click', () => {
     closeSheet()

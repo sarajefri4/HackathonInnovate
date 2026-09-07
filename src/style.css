@@ -293,18 +293,54 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
    The rail is deliberately thin — the old 62px gutter ate the card's width on a
    phone and clipped the times. It now carries nothing but the dot. */
 .timeline { position: relative; padding: 8px 20px calc(var(--nav-h) + var(--safe-b) + 30px); }
-.timeline::before {
-  content: '';  position: absolute; top: 14px; bottom: 46px; width: 2px;
-  /* الخط يُقاس من حافة .timeline لا من داخل حشوتها، فتُضاف الـ20px يدويًا حتى
-     يمر تمامًا تحت مراكز النقاط. | An absolutely positioned ::before resolves
-     against the padding box's outer edge, so the 20px inline padding has to be
-     added back by hand for the line to run through the dot centres. */
-  inset-inline-start: calc(20px + 5px);
-  background: linear-gradient(var(--g-50), var(--g-200) 60%, transparent);
-  opacity: .5;
+
+/* ============ شريط القسم | THE SECTION BAND ============
+   يقابل الشريط الملوّن في الأجندة الرسمية. أرضيّته معتمة فتحجب الخط الزمني
+   المارّ خلفه، فيبدو الخط وكأنه ينقطع عند كل قسم ثم يستأنف — وهو المطلوب.
+   The on-screen counterpart of the official agenda's coloured header row. Its
+   opaque ground covers the timeline rail passing behind it, so the rail reads
+   as breaking at each section and resuming after it — which is the intent.
+   الأرضية لون مصمت لا تدرّج: التدرّج له اتجاه فيزيائي ثابت فينقلب على الحدّ
+   المنطقي في الواجهة العربية. | The tint is flat, not a gradient: a gradient has
+   a fixed physical direction and so lands on the wrong side of the logical
+   border once the page flips to RTL. */
+.sec-band {
+  position: relative; z-index: 3;
+  margin: 2px 0 16px; padding: 11px 15px;
+  border-radius: 12px;
+  border-inline-start: 3px solid var(--sc);
+  font-family: var(--font-head); font-weight: 800;
+  font-size: 13.5px; letter-spacing: .2px; line-height: 1.45;
+  color: var(--white);
 }
+/* أول شريط في اليوم يلتصق بالأعلى | the day's first band sits flush to the top */
+.timeline > .sec-band:first-child { margin-top: 0; }
+/* الشريط الثاني فصاعدًا يفتح مسافة تفصله عمّا قبله | later bands open a gap */
+.slot + .sec-band { margin-top: 16px; }
 
 .slot { position: relative; padding-inline-start: 24px; padding-bottom: 14px; }
+/* ============ الخط الزمني | THE RAIL ============
+   يُرسم قطعةً داخل كل بطاقة، لا خطًّا واحدًا خلف العمود كله. الخط الواحد كان
+   يمرّ خلف شريط القسم — وأرضيّة الشريط شفافة بنسبة ١٥٪ فلا تحجبه — فيظهر خطًّا
+   أخضر غريبًا يقطع الشريط بجوار حدّه الملوّن. البطاقات متلاصقة رأسيًا فتتّصل
+   القطع وتبدو خطًّا واحدًا، وينقطع الخط عند كل قسم من تلقاء نفسه.
+   The rail is a segment inside each slot, not one line behind the whole column.
+   The single line ran behind the section band — whose ground is only 15% opaque
+   and so never masked it — and read as a stray green line slicing through the
+   band beside its coloured border. Slots are vertically flush, so the segments
+   join into one continuous line, and the rail now breaks at each section by
+   construction rather than by being covered up. */
+.slot::before {
+  content: ''; position: absolute; inset-inline-start: 5px;
+  top: 0; bottom: 0; width: 2px;
+  background: #1CB68D40;
+}
+/* أول بطاقة في القسم: يبدأ الخط من مركز نقطتها (19px أعلى النقطة + نصف قطرها)
+   the section's first slot: the rail starts at its dot's centre */
+.slot.run-start::before { top: 25px; }
+/* آخر بطاقة: ينتهي الخط عند مركز نقطتها فلا يتدلّى تحتها
+   the last slot: the rail ends on its dot's centre instead of dangling below */
+.slot.run-end::before { bottom: calc(100% - 25px); }
 .slot .dot {
   position: absolute; inset-inline-start: 0; top: 19px; width: 12px; height: 12px;
   border-radius: 50%; background: currentColor; z-index: 2;
@@ -330,6 +366,12 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   font-size: 16px; line-height: 1.2; letter-spacing: .3px;
   font-variant-numeric: tabular-nums;
   color: var(--light-100); white-space: nowrap;
+}
+/* بادئة الوقت ("قبل" / "Before") — بلغة الواجهة، خارج عزل النطاق اللاتيني
+   The time prefix reads in the UI language, outside the range's LTR isolate. */
+.card .when .pre {
+  font-size: 12px; font-weight: 700; color: var(--muted);
+  white-space: nowrap; margin-inline-end: -4px;
 }
 .card .when .tag { margin-inline-start: auto; }
 
@@ -455,6 +497,12 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 /* loading */
 .floor-loading { position: absolute; inset: 0; z-index: 3; display: grid; place-items: center; background: var(--g-500); transition: opacity .5s; }
 .floor-loading.hide { opacity: 0; pointer-events: none; }
+/* رسالة تعذّر العرض — تحلّ محلّ الدوّارة فلا تدور بلا نهاية
+   the "3D unavailable" message, which replaces the spinner rather than joining it */
+.floor-fallback {
+  max-width: 30ch; padding: 0 24px; text-align: center;
+  color: var(--muted); font-size: 14px; line-height: 1.7;
+}
 .spinner { width: 46px; height: 46px; border-radius: 50%; border: 3px solid var(--g-200); border-top-color: var(--g-50); animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg);} }
 
@@ -466,7 +514,16 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   background: linear-gradient(180deg, var(--g-400), var(--g-500));
   border-top: 1px solid var(--border);
   border-radius: 26px 26px 0 0;
-  padding: 10px 22px calc(var(--safe-b) + 26px);
+  /* z-index:9 هنا محبوس داخل سياق تكديس .view (z-index:1)، والشريط السفلي
+     (z-index:7) يعيش في #app — فيرسم فوق البطاقة مهما رفعنا رقمها. لذا نحجز
+     ارتفاع الشريط في الحشوة السفلية بدل مصارعة التكديس: كان سطر التعريف والوصف
+     يختفيان تمامًا خلف الشريط في المساحات القصيرة.
+     The 9 here is confined to .view's stacking context (z-index:1), while the
+     bottom nav (z-index:7) lives on #app — so the nav paints over the sheet no
+     matter how high this number goes. Reserve the nav's height in the bottom
+     padding instead of fighting the stacking: on short rooms the tagline and
+     description were sitting entirely behind the nav. */
+  padding: 10px 22px calc(var(--nav-h) + var(--safe-b) + 26px);
   transform: translateY(105%); transition: transform .42s cubic-bezier(.2,.8,.2,1);
   max-height: 82%; overflow-y: auto; box-shadow: 0 -14px 44px #000a;
 }

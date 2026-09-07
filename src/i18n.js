@@ -49,6 +49,11 @@ const UI = {
     en: 'Drag to rotate · tap any room for details',
   },
   resetView: { ar: 'إعادة الضبط', en: 'Reset view' },
+  /* يظهر إن تعذّر تشغيل الرسم ثلاثي الأبعاد على الجهاز | shown when 3D cannot start */
+  floorUnavailable: {
+    ar: 'تعذّر عرض المخطط ثلاثي الأبعاد على هذا الجهاز. استخدم قائمة المساحات لتصفّح القاعات.',
+    en: 'The 3D plan could not start on this device. Use the Spaces list to browse the halls.',
+  },
 
   // بطاقة الغرفة | room sheet
   offerings: { ar: 'ماذا تقدّم هذه المساحة', en: 'What this space offers' },
