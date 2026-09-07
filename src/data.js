@@ -370,15 +370,13 @@ export const AGENDA = [
   {
     day: 'd1', section: 's1', start: '10:15', end: '10:20', room: 'hackathon', icon: 'mic', kind: 'stage',
     title: {
-      ar: 'كلمة رئيس قسم الذكاء الاصطناعي وتحليل البيانات',
+      ar: ' كلمة رئيس قسم الذكاء الاصطناعي وتحليل البيانات في صندوق الاستثمارات العامة',
       en: 'Remarks by PIF\u2019s Head of Data & AI',
-    },
-    desc: { ar: 'خالد العصيمي — صندوق الاستثمارات العامة', en: 'Khaled AlQusaimi' },
+    }
   },
   {
     day: 'd1', section: 's1', start: '10:20', end: '10:30', room: 'hackathon', icon: 'target', kind: 'stage',
     title: { ar: 'نظرة عامة على تحدي مساهمة', en: 'Challenge Deep Dive' },
-    desc: { ar: 'نايف النجيدي', en: 'Naif Alnujaydi' },
   },
  {
   day: 'd1', section: 's1', start: '10:30', end: '10:40', room: 'hackathon', icon: 'sparkle', kind: 'stage',
@@ -390,12 +388,12 @@ export const AGENDA = [
 },
   {
     day: 'd1', section: 's1', start: '10:40', end: '12:00', room: 'hackathon', icon: 'code', kind: 'build',
-    title: { ar: 'عمل الفرق وتطوير الأفكار', en: 'Team Hacking & Idea Development' },
+    title: { ar: 'العمل على المشاريع', en: 'Team Hacking & Idea Development' },
   },
   {
     day: 'd1', section: 's1', start: '12:00', end: '13:00', room: 'hackathon', icon: 'users', kind: 'build',
     title: { ar: 'جولة الإرشاد الأولى', en: 'Mentoring Round 1' },
-    desc: { ar: 'تنقّل المرشدين بين الفرق', en: 'Mentors rotate across teams' },
+    desc: { ar: 'فرصة لمراجعة أفكاركم مع المرشدين', en: 'A chance to review your ideas with mentors' },
   },
   {
     day: 'd1', section: 's1', start: '13:00', end: '13:30', room: 'lunch', icon: 'utensils', kind: 'break',
