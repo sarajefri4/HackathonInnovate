@@ -445,8 +445,8 @@ export const AGENDA = [
   },
   {
     day: 'd1', section: 's1', start: '10:20', end: '10:30', room: 'hackathon', icon: 'target', kind: 'stage',
-    title: { ar: 'نظرة عامة على تحدي مساهمة', en: 'Challenge Deep Dive' },
-    desc: { ar: 'نايف النجيدي', en: 'Naif Al-Nujaidi' },
+    title: { ar: 'نظرة عامة على تحدي مساهمة', en: 'Challenge Deep Dive' }
+    
   },
  {
   day: 'd1', section: 's1', start: '10:30', end: '10:40', room: 'hackathon', icon: 'sparkle', kind: 'stage',
