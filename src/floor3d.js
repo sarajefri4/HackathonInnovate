@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { ROOMS, CONTEXT, FOOTPRINT, CATEGORIES } from './data.js'
+import { ROOMS, CONTEXT, FOOTPRINT, CATEGORIES, POI } from './data.js'
+import { iconSvg } from './icons.js'
 import { L, isRTL } from './i18n.js'
 
 /*
@@ -48,6 +49,7 @@ export function createFloor3D(canvas, { onSelect } = {}) {
   const floorGroups = {} // id -> THREE.Group
   const selectable = []  // room meshes of active floor
   const roomMeshes = {}  // roomId -> { mesh, edges, baseY, targetY, mat, base, hi }
+  const poiMarkers = []  // { poi, sprite, group } for every floor built so far
   let activeFloor = null
   let selectedId = null
   let interacted = false
@@ -127,6 +129,123 @@ export function createFloor3D(canvas, { onSelect } = {}) {
     ctx.closePath()
   }
 
+  /* ---------- علامة مرفق (أيقونة + اسم) ----------
+     A facility marker: the icon and the name in one pill, floating over a ring
+     drawn on the floor. Built the same way as the room labels — a canvas turned
+     into a sprite — with one difference: the icon is an SVG, and an SVG has to
+     be decoded before it can be drawn. The pill is painted immediately and the
+     glyph is stamped in whenever the decode lands, so a slow decode delays the
+     icon, never the marker. */
+  function makeMarkerSprite(poi, color = '#eafff4') {
+    const c = document.createElement('canvas')
+    const ctx = c.getContext('2d')
+    const fs = 40
+    const ico = 46
+    const gap = 13
+    const padX = 26
+    const font = `700 ${fs}px Arial, Helvetica, sans-serif`
+    const rtl = isRTL()
+    const text = L(poi.name)
+
+    ctx.font = font
+    ctx.direction = rtl ? 'rtl' : 'ltr'
+    const tw = Math.ceil(ctx.measureText(text).width)
+    const w = padX * 2 + ico + gap + tw
+    const h = 74
+    c.width = w
+    c.height = h
+
+    ctx.font = font
+    ctx.direction = rtl ? 'rtl' : 'ltr'
+    ctx.textBaseline = 'middle'
+
+    const r = h / 2
+    ctx.fillStyle = 'rgba(0,10,6,0.78)'
+    roundRect(ctx, 1, 1, w - 2, h - 2, r)
+    ctx.fill()
+    ctx.lineWidth = 2.5
+    ctx.strokeStyle = color + '66'
+    roundRect(ctx, 1, 1, w - 2, h - 2, r)
+    ctx.stroke()
+
+    /* الأيقونة في جهة البداية والنص بعدها، فينقلب الترتيب مع اتجاه اللغة
+       Icon on the leading side, text after it, so the pair flips with the
+       page direction rather than reading backwards in Arabic. */
+    const icoX = rtl ? w - padX - ico : padX
+    const textX = rtl ? w - padX - ico - gap : padX + ico + gap
+    ctx.textAlign = rtl ? 'right' : 'left'
+    ctx.fillStyle = color
+    ctx.fillText(text, textX, h / 2 + 2)
+
+    const tex = new THREE.CanvasTexture(c)
+    tex.anisotropy = 4
+    const spr = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, depthTest: false }))
+    const targetH = 2.6
+    const sc = targetH / h
+    spr.scale.set(w * sc, h * sc, 1)
+    spr.renderOrder = 11
+
+    const img = new Image()
+    img.onload = () => {
+      ctx.drawImage(img, icoX, (h - ico) / 2, ico, ico)
+      tex.needsUpdate = true
+    }
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(iconSvg(poi.icon, ico, color))
+
+    return spr
+  }
+
+  /* ---------- المرافق: حلقة على الأرض وعلامة فوقها ----------
+     Facilities are markers, not blocks: a ring on the slab saying "here", a
+     hairline rising from it, and the icon pill at the top. Nothing is added to
+     `selectable`, so they stay out of the picker and out of the Spaces list —
+     they are signposts, not rooms.
+
+     العلامة أعلى من أطول كتلة في الطابق (٦ وحدات) فلا يبتلعها سقف قاعة،
+     وحلقتها وساقها ترتسمان فوق كل شيء كدبّوس الخرائط: موضعها يجب أن يُرى من
+     أي زاوية، لا أن يختفي خلف كتلة تصادف وقوفها في الطريق.
+     The pill clears the tallest block on either floor (6 units), so no hall
+     roof swallows it, and the ring and stem draw over everything the way a map
+     pin does: where a facility is has to be visible from every angle, not hide
+     behind whichever block happens to stand in the way. */
+  const POI_Y = 8.2
+  function buildPOI(floorId, group) {
+    POI.filter((p) => p.floor === floorId).forEach((poi) => {
+      const col = new THREE.Color(0x1cb68d)
+
+      const ring = new THREE.Mesh(
+        new THREE.RingGeometry(1.8, 2.5, 36),
+        new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.6, side: THREE.DoubleSide, depthTest: false, depthWrite: false })
+      )
+      ring.rotation.x = -Math.PI / 2
+      ring.position.set(poi.at.x, 0.06, poi.at.z)
+      ring.renderOrder = 8
+
+      const dot = new THREE.Mesh(
+        new THREE.CircleGeometry(1, 28),
+        new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.28, side: THREE.DoubleSide, depthTest: false, depthWrite: false })
+      )
+      dot.rotation.x = -Math.PI / 2
+      dot.position.set(poi.at.x, 0.05, poi.at.z)
+      dot.renderOrder = 8
+
+      const stem = new THREE.Line(
+        new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(poi.at.x, 0.1, poi.at.z),
+          new THREE.Vector3(poi.at.x, POI_Y - 1.4, poi.at.z),
+        ]),
+        new THREE.LineBasicMaterial({ color: col, transparent: true, opacity: 0.45, depthTest: false, depthWrite: false })
+      )
+      stem.renderOrder = 8
+
+      const sprite = makeMarkerSprite(poi)
+      sprite.position.set(poi.at.x, POI_Y, poi.at.z)
+
+      group.add(ring, dot, stem, sprite)
+      poiMarkers.push({ poi, sprite, group })
+    })
+  }
+
   // ---------- build one floor ----------
   function buildFloor(floorId) {
     const group = new THREE.Group()
@@ -179,6 +298,8 @@ export function createFloor3D(canvas, { onSelect } = {}) {
       roomMeshes[room.id] = { mesh, edges, mat, base: base.clone(), hi: col.clone(), baseY: h / 2, targetY: h / 2, floor: floorId, label, labelBaseY: h + 3.4, big, group }
     })
 
+    buildPOI(floorId, group)
+
     group.visible = false
     scene.add(group)
     floorGroups[floorId] = group
@@ -199,6 +320,18 @@ export function createFloor3D(canvas, { onSelect } = {}) {
       o.label.material.map.dispose()
       o.label.material.dispose()
       o.label = next
+    })
+    /* والعلامات كذلك — اسمها ونصّها واتجاهه كلها مرسومة داخل الصورة نفسها
+       The markers too: their name, and the direction it reads in, are baked
+       into the picture, so a language switch means redrawing them. */
+    poiMarkers.forEach((m) => {
+      const next = makeMarkerSprite(m.poi)
+      next.position.copy(m.sprite.position)
+      m.group.add(next)
+      m.group.remove(m.sprite)
+      m.sprite.material.map.dispose()
+      m.sprite.material.dispose()
+      m.sprite = next
     })
   }
 

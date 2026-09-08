@@ -182,6 +182,29 @@ export const ROOMS = [
     plan: { x: 22, z: -9.9, w: 8, d: 7, h: 3.2 },
   },
   {
+    id: 'theatre',
+    floor: 'GF',
+    name: { ar: 'المسرح', en: 'Theatre' },
+    category: 'activity',
+    icon: 'theatre',
+    tagline: { ar: 'بروفة العروض', en: 'Rehearse your demo' },
+    desc: {
+      ar: 'مساحة مجهّزة تتدرّب فيهاالفرق على تقديم عروضها قبل الوقوف أمام لجنة التحكيم.',
+      en: 'A stage space where teams rehearse their demo before facing the judges ',
+    },
+    offerings: {
+      ar: [
+        'منصّة للتدريب',
+        'تجربة التوقيت قبل العرض الرسمي',
+      ],
+      en: [
+        'A stage to rehearse on',
+        'Time your pitch before the real thing',
+      ],
+    },
+    plan: { x: 34, z: -5, w: 12, d: 7, h: 4.5 },
+  },
+  {
   id: 'mentor',
   floor: 'GF',
   name: { ar: 'منطقة المرشدين وفريق العمل', en: 'Mentor & Crew Area' },
@@ -289,19 +312,70 @@ id: 'lunch',
 ]
 
 /* ----------------------------------------------------------------------------
- *  كتل سياقية غير تفاعلية (درج/دورات مياه) لإضفاء واقعية على المخطط
- *  Non-interactive context blocks (stairs / restrooms) for spatial realism
+ *  كتل سياقية غير تفاعلية (الدرج) لإضفاء واقعية على المخطط
+ *  Non-interactive context blocks (stairs) for spatial realism
+ * ----------------------------------------------------------------------------
+ *  دورات المياه كانت هنا ككتل صمّاء؛ صارت الآن علامات أيقونية في POI أدناه،
+ *  فهي مرفق يُدَلّ عليه لا مساحة تُستكشف.
+ *  The restrooms used to sit here as blank blocks. They are icon markers in POI
+ *  below now — a facility you point at, not a space you explore.
  * ------------------------------------------------------------------------- */
 export const CONTEXT = {
   GF: [
-    { x: -42, z: -18, w: 11, d: 8, h: 3, label: { ar: 'دورات المياه', en: 'Restrooms' } },
     { x: 2, z: 1, w: 6, d: 11, h: 1.4, label: { ar: 'الدرج', en: 'Stairs' } },
   ],
   FF: [
-    { x: -40, z: -15, w: 12, d: 9, h: 3, label: { ar: 'دورات المياه', en: 'Restrooms' } },
     { x: 0, z: -1, w: 7, d: 12, h: 1.4, label: { ar: 'الدرج', en: 'Stairs' } },
   ],
 }
+
+/* ----------------------------------------------------------------------------
+ *  المرافق — علامات أيقونية على المخطط  |  FACILITIES — icon markers
+ * ----------------------------------------------------------------------------
+ *  مرافق يحتاجها الحاضر ولا تحتاج بطاقة تفاصيل: دورات المياه والمصلى. تُرسم
+ *  أيقونةً واسمًا فوق حلقة صغيرة على الأرض، بلا كتلة ولا نقر ولا مدخل في قائمة
+ *  المساحات — يكفي أن تعرف أين هي.
+ *
+ *  المصلى هو مسجد المبنى نفسه، وهو في الطابق الأول وحده — فلا تُضَف له علامة
+ *  ثانية في الطابق الأرضي تُوهم بوجود مكانين للصلاة.
+ *
+ *  The facilities an attendee needs to find but does not need a detail card
+ *  for: the restrooms and the prayer room. Each is drawn as an icon and a name
+ *  floating over a small ring on the floor — no block, no tap target and no
+ *  entry in the Spaces list. Knowing where it is, is the whole job.
+ *
+ *  The prayer room is the building's mosque, and it is on the first floor and
+ *  nowhere else — so it gets no second marker downstairs, which would imply
+ *  two places to pray.
+ *
+ *  at = { x, z } نقطة على أرض الطابق | a point on the floor slab
+ * ------------------------------------------------------------------------- */
+export const POI = [
+  // ===== الطابق الأرضي — GROUND FLOOR =====
+  {
+    id: 'wc-gf',
+    floor: 'GF',
+    icon: 'restroom',
+    name: { ar: 'دورات المياه', en: 'Restrooms' },
+    at: { x: -42, z: -18 },
+  },
+
+  // ===== الطابق الأول — FIRST FLOOR =====
+  {
+    id: 'wc-ff',
+    floor: 'FF',
+    icon: 'restroom',
+    name: { ar: 'دورات المياه', en: 'Restrooms' },
+    at: { x: -40, z: -15 },
+  },
+  {
+    id: 'prayer',
+    floor: 'FF',
+    icon: 'prayer',
+    name: { ar: 'مصلى', en: 'Prayer Room' },
+    at: { x: 24, z: -2.5 },
+  },
+]
 
 /* ----------------------------------------------------------------------------
  *  المنشأة (شكل الأرضية شبه المنحرف)  |  BUILDING FOOTPRINT (trapezoid)
@@ -337,7 +411,7 @@ export const SECTIONS = {
   s1: { title: { ar: 'اليوم الأول — الافتتاح وعمل الفرق', en: 'Day 1 — Opening & Team Hacking' }, color: '#1CB68D' },
   s2: { title: { ar: 'اليوم الثاني — العروض والتقييم', en: 'Day 2 — Demo & Evaluation' }, color: '#1CB68D' },
   /* الذهبي مأخوذ عيّنةً من شريط الهوية الرسمي | gold sampled off the brand strip */
-  s3: { title: { ar: 'حفل الختام', en: 'Closing Ceremony' }, color: '#C79E63' },
+  s3: { title: { ar: 'الحفل الختامي: إعلان الفائزين', en: 'Closing Ceremony: Announce Winners' }, color: '#C79E63' },
 }
 
 /* ----------------------------------------------------------------------------
@@ -358,11 +432,6 @@ export const AGENDA = [
     title: { ar: 'التسجيل والترحيب', en: 'Registration & Welcome' },
   },
   {
-    day: 'd1', section: 's1', start: '09:00', end: '10:00', room: 'welcome', icon: 'map', kind: 'break',
-    title: { ar: 'جولات مركز الابتكار', en: 'Innovation Center Tours' },
-    desc: { ar: 'اختياري', en: 'Optional' },
-  },
-  {
     day: 'd1', section: 's1', start: '10:00', end: '10:15', room: 'hackathon', icon: 'mic', kind: 'stage',
     title: { ar: 'الافتتاح', en: 'Hackathon Kick-off' },
     desc: { ar: 'نظرة عامة على تجربة الهاكاثون', en: 'Introduction and an overview of the hackathon' },
@@ -370,17 +439,18 @@ export const AGENDA = [
   {
     day: 'd1', section: 's1', start: '10:15', end: '10:20', room: 'hackathon', icon: 'mic', kind: 'stage',
     title: {
-      ar: ' كلمة رئيس قسم الذكاء الاصطناعي وتحليل البيانات في صندوق الاستثمارات العامة',
-      en: 'Remarks by PIF\u2019s Head of Data & AI',
+      ar: 'كلمة رئيس قسم الذكاء الاصطناعي وتحليل البيانات في صندوق الاستثمارات العامة',
+      en: 'Opening Remarks by PIF\u2019s Head of Data & AI',
     }
   },
   {
     day: 'd1', section: 's1', start: '10:20', end: '10:30', room: 'hackathon', icon: 'target', kind: 'stage',
     title: { ar: 'نظرة عامة على تحدي مساهمة', en: 'Challenge Deep Dive' },
+    desc: { ar: 'نايف النجيدي', en: 'Naif Al-Nujaidi' },
   },
  {
   day: 'd1', section: 's1', start: '10:30', end: '10:40', room: 'hackathon', icon: 'sparkle', kind: 'stage',
-  title: { ar: 'عرض تعريفي بـ HUMAIN Code', en: 'HUMAIN Code Demo' },
+  title: { ar: 'أدوات الابتكار — HUMAIN Code', en: 'HUMAIN Code Demo' },
   desc: {
     ar: 'جولة سريعة على أداة HUMAIN Code وكيفية استخدامها خلال الهاكاثون.',
     en: 'A quick walkthrough of HUMAIN Code and how to use it during the hackathon.',
@@ -388,12 +458,12 @@ export const AGENDA = [
 },
   {
     day: 'd1', section: 's1', start: '10:40', end: '12:00', room: 'hackathon', icon: 'code', kind: 'build',
-    title: { ar: 'العمل على المشاريع', en: 'Team Hacking & Idea Development' },
+    title: { ar: 'عمل الفرق وتطوير الأفكار', en: 'Team Hacking: Idea Development & Enhancement' },
   },
   {
     day: 'd1', section: 's1', start: '12:00', end: '13:00', room: 'hackathon', icon: 'users', kind: 'build',
     title: { ar: 'جولة الإرشاد الأولى', en: 'Mentoring Round 1' },
-    desc: { ar: 'فرصة لمراجعة أفكاركم مع المرشدين', en: 'A chance to review your ideas with mentors' },
+    desc: { ar: 'تنقّل المرشدين بين الفرق', en: 'Mentors rotate across teams' },
   },
   {
     day: 'd1', section: 's1', start: '13:00', end: '13:30', room: 'lunch', icon: 'utensils', kind: 'break',
@@ -426,7 +496,6 @@ export const AGENDA = [
   // ===== اليوم الثاني — العروض والتقييم | DAY 2 — DEMO & EVALUATION =====
   {
     day: 'd2', section: 's2', start: '10:00', end: '11:30', room: 'coding', icon: 'clock', kind: 'build',
-    timePrefix: { ar: 'قبل', en: 'Before' },
     title: { ar: 'مركز الابتكار متاح', en: 'Innovation Hub Open' },
     desc: { ar: 'عمل نهائي اختياري، وتدريب، واستعداد', en: 'Optional final work, rehearsal & preparation' },
   },
@@ -439,10 +508,10 @@ export const AGENDA = [
   },
   {
     day: 'd2', section: 's2', start: '12:00', end: '12:15', room: 'hackathon', icon: 'mic', kind: 'stage',
-    title: { ar: 'انطلاق فقرة العروض', en: 'Demo Kickoff' },
+    title: { ar: 'انطلاق فقرة العروض', en: 'Solution Showcase Kick-off' },
     desc: {
       ar: 'التعريف بلجنة التحكيم وإرشادات تقديم العروض',
-      en: 'Judges introduction & presentation guidelines',
+      en: 'Begin the team demos',
     },
   },
   {
@@ -453,7 +522,7 @@ export const AGENDA = [
     day: 'd2', section: 's2', start: '14:15', end: '14:45', room: 'hackathon', icon: 'users', kind: 'break',
     title: {
       ar: 'نقاش لجنة التحكيم واختيار أفضل ٥ فرق',
-      en: 'Judges\u2019 Deliberation & Top 5 Finalists Selection',
+      en: 'Judges\u2019 Deliberation & Top Finalists Selection',
     },
   },
   {
@@ -469,11 +538,11 @@ export const AGENDA = [
   {
     day: 'd2', section: 's3', start: '15:10', end: '15:15', room: 'hackathon', icon: 'play', kind: 'stage',
     title: { ar: 'عرض فيديو', en: 'Hackathon Video Recap' },
-    desc: { ar: 'أبرز لحظات الهاكاثون', en: 'The highlights of the two days' },
+    desc: { ar: 'أبرز لحظات الهاكاثون', en: 'The hackathon highlights' },
   },
   {
     day: 'd2', section: 's3', start: '15:15', end: '15:50', room: 'hackathon', icon: 'mic', kind: 'stage',
-    title: { ar: 'عرض الحلول الـ٦ المؤهلة', en: 'Top 6 Finalists Live Presentations & Demos' },
+    title: { ar: 'عرض الحلول الـ٦ المؤهلة', en: 'Top Finalists Live Presentations & Demos' },
     desc: { ar: '٣ دقائق لكل فريق', en: '3 minutes each' },
   },
   {

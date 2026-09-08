@@ -23,6 +23,7 @@ import pifArUrl from './assets/pif-logo-ar.svg'
 import tuwaiqUrl from './assets/tuwaiq-academy.png'
 import saudiUrl from './assets/digital-saudi.png'
 import humainUrl from './assets/humain.png'
+import siteUrl from './assets/site.png'
 
 /* الأخضر النعناعي المأخوذ من الشعار | the mint sampled from the wordmark */
 export const MINT = '#1CB68D'
@@ -33,6 +34,7 @@ export const PIF_AR_SRC = pifArUrl
 export const TUWAIQ_SRC = tuwaiqUrl
 export const DIGITAL_SAUDI_SRC = saudiUrl
 export const HUMAIN_SRC = humainUrl
+export const SITE_SRC = siteUrl
 
 /* نسب الصور — تمنع القفزة أثناء التحميل | intrinsic ratios, to avoid reflow */
 export const LOCKUP_RATIO = '860 / 284'
@@ -69,9 +71,10 @@ export const pif = () => {
 }
 
 /* ----------------------------------------------------------------------------
- *  شعارات الشركاء — مقتطعة من شريط العرض الرسمي، أبيض على خلفية شفافة
- *  The partner logos, lifted out of the official header strip as white
- *  artwork on transparency. Extracted at 3x so they stay crisp on retina.
+ *  شعارات الشركاء — أبيض على خلفية شفافة، للأرضيات الداكنة وحدها
+ *  The partner logos: white artwork on transparency, for dark grounds only.
+ *  The first three were lifted out of the official header strip at 3x, so they
+ *  stay crisp on retina; the fourth came in as its own file.
  * ------------------------------------------------------------------------- */
 export const TUWAIQ = `<img class="pl pl-tuwaiq" src="${TUWAIQ_SRC}" alt="Tuwaiq Academy" width="456" height="90" decoding="async" />`
 export const DIGITAL_SAUDI = `<img class="pl pl-saudi" src="${DIGITAL_SAUDI_SRC}" alt="Digital Saudi" width="582" height="156" decoding="async" />`
@@ -79,17 +82,25 @@ export const DIGITAL_SAUDI = `<img class="pl pl-saudi" src="${DIGITAL_SAUDI_SRC}
    The transparent margin was cropped off this one, so sizing it by height
    lands it optically level with the other two. */
 export const HUMAIN = `<img class="pl pl-humain" src="${HUMAIN_SRC}" alt="HUMAIN" width="432" height="68" decoding="async" />`
+/* شعار «سايت» يصل بالحبر الأخضر الداكن للأرضيات الفاتحة، فأُعيد تلوينه أبيض مع
+   الإبقاء على قناة الشفافية كما هي، وقُصّ هامشه — ليقف مع إخوته على الشريط
+   الداكن نفسه. الأصل الملوّن محفوظ في مجلد الأصول.
+   The Site mark ships as dark green ink, drawn for light grounds. It is
+   repainted white here — alpha channel untouched, so the antialiased edges
+   survive — and its margin cropped, so it stands on the same dark strip as the
+   other three. The original coloured artwork is kept in the assets folder. */
+export const SITE = `<img class="pl pl-site" src="${SITE_SRC}" alt="Site" width="1702" height="467" decoding="async" />`
 
 /* ----------------------------------------------------------------------------
  *  شريط الهوية  |  The brand strip
  * ----------------------------------------------------------------------------
  *  نفس ترتيب شريط العرض الرسمي: صندوق الاستثمارات العامة في البداية، وفي
  *  النهاية عنوان "الشركاء الاستراتيجيون" وتحته شعارات طويق والسعودية الرقمية
- *  و«هيومين»، تفصل بينها خطوط رأسية. يُستخدم على كل الشاشات بلا استثناء.
+ *  و«هيومين» و«سايت»، تفصل بينها خطوط رأسية. يُستخدم على كل الشاشات بلا استثناء.
  *
  *  The same arrangement as the official header strip: the fund leads, and the
- *  "Strategic Partners" line closes with Tuwaiq Academy, Digital Saudi and
- *  HUMAIN beneath it, split by rules. Used on every screen, unchanged.
+ *  "Strategic Partners" line closes with Tuwaiq Academy, Digital Saudi, HUMAIN
+ *  and Site beneath it, split by rules. Used on every screen, unchanged.
  *
  *  `label` يُمرَّر من طبقة اللغة | the label is passed in from the i18n layer.
  * ------------------------------------------------------------------------- */
@@ -104,6 +115,8 @@ export const brandStrip = (label) => `
         ${DIGITAL_SAUDI}
         <span class="pl-div" aria-hidden="true"></span>
         ${HUMAIN}
+        <span class="pl-div" aria-hidden="true"></span>
+        ${SITE}
       </div>
     </div>
   </div>`

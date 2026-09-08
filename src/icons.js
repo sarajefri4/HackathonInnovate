@@ -26,7 +26,20 @@ const P = {
   sparkle: '<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18"/>',
   globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18"/>',
   play: '<circle cx="12" cy="12" r="9"/><path d="m10 8.5 6 3.5-6 3.5Z"/>',
+  restroom: '<path d="M12 3v18"/><circle cx="6.8" cy="5" r="1.7"/><path d="M6.8 8.4a2.2 2.2 0 0 0-2.2 2.2v3.6h1.3V21h1.9v-6.8h1.2v-3.6a2.2 2.2 0 0 0-2.2-2.2Z"/><circle cx="17.2" cy="5" r="1.7"/><path d="M17.2 8.4c-1.5 0-2.3.9-2.5 2.2l-.9 4.2h1.9V21h3v-6.2h1.9l-.9-4.2c-.2-1.3-1-2.2-2.5-2.2Z"/>',
+  prayer: '<path d="M7 21V10.5a5 5 0 0 1 10 0V21"/><path d="M4 21h16"/><path d="M12 7.4V4.8"/><path d="M10.2 14.4h3.6"/>',
+  theatre: '<path d="M3.5 3.5h17v11h-17z"/><path d="M7.6 3.5c0 4.3-.7 7.6-2.2 9.7M16.4 3.5c0 4.3.7 7.6 2.2 9.7"/><path d="M12 14.5V19M8 21h8"/>',
   camera: '<path d="M3 8.5A1.5 1.5 0 0 1 4.5 7h2.7l1.3-2h7l1.3 2h2.7A1.5 1.5 0 0 1 21 8.5V18a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18Z"/><circle cx="12" cy="13" r="3.5"/>',
+}
+
+/* نسخة مستقلة من الأيقونة كنص SVG كامل — تُرسم داخل canvas للافتات المخطط
+   ثلاثي الأبعاد، حيث لا يوجد DOM ترث منه اللون.
+   A standalone SVG string version of the same icon. The 3D map draws its
+   markers into a canvas, where there is no DOM to inherit `currentColor`
+   from, so the stroke colour is baked in here instead. */
+export function iconSvg(name, size = 24, color = '#eafff4') {
+  const body = P[name] || P.info
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${body}</svg>`
 }
 
 export function icon(name, size = 24, cls = '') {
